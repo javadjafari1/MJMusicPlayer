@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 android {
@@ -49,8 +50,12 @@ android {
     }
 }
 
-dependencies {
+detekt {
+    autoCorrect = true
+    config.setFrom(file("${rootDir}/config/detekt/detekt.yml"))
+}
 
+dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.2")
