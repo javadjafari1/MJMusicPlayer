@@ -1,4 +1,4 @@
-name: checks on the develop pull requests
+name: Android CI
 
 on:
   pull_request:
@@ -19,7 +19,7 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission for gradlew
-        run: chmod +ux gradlew
+        run: chmod +x gradlew
 
       - name: Build with Gradle
         run: ./gradlew build
