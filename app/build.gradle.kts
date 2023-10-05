@@ -52,7 +52,7 @@ android {
 
 detekt {
     autoCorrect = true
-    config.setFrom(file("${rootDir}/config/detekt/detekt.yml"))
+    config.setFrom(file("$rootDir/config/detekt/detekt.yml"))
 }
 
 dependencies {
@@ -64,6 +64,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics:$composeUiVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
     implementation("androidx.compose.material3:material3:1.2.0-alpha04")
+    // Koin
+    implementation("io.insert-koin:koin-androidx-compose:3.5.0")
 
     testImplementation("junit:junit:4.13.2")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
