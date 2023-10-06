@@ -67,8 +67,9 @@ dependencies {
     // Koin
     implementation("io.insert-koin:koin-androidx-compose:3.5.0")
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.4")
-    implementation("androidx.navigation:navigation-common-ktx:2.7.4")
+    val navigationVersion = "2.7.4"
+    implementation("androidx.navigation:navigation-compose:$navigationVersion")
+    implementation("androidx.navigation:navigation-common-ktx:$navigationVersion")
 
     testImplementation("junit:junit:4.13.2")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")

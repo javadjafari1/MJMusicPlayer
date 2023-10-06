@@ -1,4 +1,4 @@
-package ir.thatsmejavad.mjmusic
+package ir.thatsmejavad.mjmusic.core
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibilityScope
