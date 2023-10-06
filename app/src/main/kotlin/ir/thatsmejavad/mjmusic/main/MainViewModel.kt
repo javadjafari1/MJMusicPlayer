@@ -1,4 +1,4 @@
-package ir.thatsmejavad.mjmusic
+package ir.thatsmejavad.mjmusic.main
 
 import androidx.lifecycle.ViewModel
 

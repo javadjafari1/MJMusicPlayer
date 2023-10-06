@@ -66,6 +66,9 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0-alpha04")
     // Koin
     implementation("io.insert-koin:koin-androidx-compose:3.5.0")
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-common-ktx:2.7.4")
 
     testImplementation("junit:junit:4.13.2")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
