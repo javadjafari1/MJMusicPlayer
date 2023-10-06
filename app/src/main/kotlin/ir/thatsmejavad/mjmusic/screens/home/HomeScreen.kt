@@ -8,5 +8,5 @@ import androidx.navigation.NavController
 fun HomeScreen(
     navController: NavController,
 ) {
-    Text(text = "Implementation Home Screen Later")
+    Text(text = "Implementation ${navController.currentBackStackEntry?.destination?.route} Screen Later")
 }
