@@ -27,8 +27,12 @@ fun ContentResolver.query(
             putStringArray(ContentResolver.QUERY_ARG_SORT_COLUMNS, arrayOf(order))
             putInt(
                 ContentResolver.QUERY_ARG_SORT_DIRECTION,
-                if (ascending) ContentResolver.QUERY_SORT_DIRECTION_ASCENDING
-                else ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
+                if (ascending) {
+                    ContentResolver.QUERY_SORT_DIRECTION_ASCENDING
+                }
+                else {
+                    ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
+                }
             )
             if (selectionArguments != null) {
                 putStringArray(ContentResolver.QUERY_ARG_SQL_SELECTION_ARGS, selectionArguments)
