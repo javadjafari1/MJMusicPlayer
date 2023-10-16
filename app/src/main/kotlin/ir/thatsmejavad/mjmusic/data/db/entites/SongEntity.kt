@@ -7,16 +7,17 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "songs")
 data class SongEntity(
     @PrimaryKey
+    @ColumnInfo("song_id")
     val id: Long,
     val name: String,
+    @ColumnInfo("album_id")
     val albumId: Long,
-    val data: String,
     @ColumnInfo(name = "mime_type")
     val mimeType: String,
-    @ColumnInfo(name = "date_added")
-    val dateAdded: Long,
-    @ColumnInfo(name = "date_modified")
-    val dateModified: Long,
+    @ColumnInfo(name = "added_date")
+    val addedDate: Long,
+    @ColumnInfo(name = "modified_date")
+    val modifiedDate: Long,
     val duration: Int,
     val year: Int,
     val size: Long,

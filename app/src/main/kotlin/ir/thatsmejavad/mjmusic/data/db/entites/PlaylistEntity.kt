@@ -9,8 +9,8 @@ data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val name: String,
-    @ColumnInfo(name = "date_added")
-    val dateAdded: Long,
-    @ColumnInfo(name = "date_modified")
-    val dateModified: Long,
+    @ColumnInfo(name = "created_date")
+    val createdDate: Long,
+    @ColumnInfo(name = "modified_date")
+    val modifiedDate: Long,
 )
