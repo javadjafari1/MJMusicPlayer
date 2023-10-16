@@ -1,15 +1,27 @@
 package ir.thatsmejavad.mjmusic
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import ir.thatsmejavad.mjmusic.core.ApplicationScreens
 import ir.thatsmejavad.mjmusic.core.animatedComposable
 import ir.thatsmejavad.mjmusic.screens.home.HomeScreen
+import ir.thatsmejavad.mjmusic.screens.music.MusicScreen
+import ir.thatsmejavad.mjmusic.screens.search.SearchScreen
+import ir.thatsmejavad.mjmusic.screens.setting.SettingScreen
 
-fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
-    animatedComposable(
-        route = ApplicationScreens.Home.route
-    ) {
-        HomeScreen(navController = navController)
+fun NavGraphBuilder.mainNavGraph(
+    navController: NavController
+) {
+    animatedComposable(ApplicationScreens.Home.route) {
+        HomeScreen(navController)
+    }
+    animatedComposable(ApplicationScreens.Search.route) {
+        SearchScreen(navController)
+    }
+    animatedComposable(ApplicationScreens.Music.route) {
+        MusicScreen(navController)
+    }
+    animatedComposable(ApplicationScreens.Setting.route) {
+        SettingScreen(navController)
     }
 }
