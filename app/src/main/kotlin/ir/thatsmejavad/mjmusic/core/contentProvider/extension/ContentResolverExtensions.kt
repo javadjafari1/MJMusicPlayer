@@ -29,8 +29,7 @@ fun ContentResolver.query(
                 ContentResolver.QUERY_ARG_SORT_DIRECTION,
                 if (ascending) {
                     ContentResolver.QUERY_SORT_DIRECTION_ASCENDING
-                }
-                else {
+                } else {
                     ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
                 }
             )
@@ -42,8 +41,10 @@ fun ContentResolver.query(
         return query(uri, projection, queryArgs, null)
     } else {
         //language=SQL
-        val sortOrder = order + (if (ascending) " ASC" else " DESC") + " LIMIT $limit OFFSET $offset"
-        return query(uri, projection, selection, selectionArguments, sortOrder)}
+        val sortOrder =
+            order + (if (ascending) " ASC" else " DESC") + " LIMIT $limit OFFSET $offset"
+        return query(uri, projection, selection, selectionArguments, sortOrder)
+    }
 }
 
 fun ContentResolver.observeChanges(uri: Uri) = callbackFlow {

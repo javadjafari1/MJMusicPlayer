@@ -4,7 +4,6 @@ import android.provider.MediaStore
 
 val AUDIO_PROJECTION = arrayOf(
     MediaStore.Audio.AudioColumns._ID,
-    MediaStore.Audio.AudioColumns.DATA,
     MediaStore.Audio.AudioColumns.DISPLAY_NAME,
     MediaStore.Audio.AudioColumns.TITLE,
     MediaStore.Audio.AudioColumns.DURATION,
@@ -30,7 +29,6 @@ val AUDIO_PROJECTION = arrayOf(
 
 object AudioProjectionIndexes {
     val id = AUDIO_PROJECTION.indexOf(MediaStore.Audio.AudioColumns._ID)
-    val data = AUDIO_PROJECTION.indexOf(MediaStore.Audio.AudioColumns.DATA)
     val displayName = AUDIO_PROJECTION.indexOf(MediaStore.Audio.AudioColumns.DISPLAY_NAME)
     val title = AUDIO_PROJECTION.indexOf(MediaStore.Audio.AudioColumns.TITLE)
     val duration = AUDIO_PROJECTION.indexOf(MediaStore.Audio.AudioColumns.DURATION)
