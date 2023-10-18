@@ -10,7 +10,6 @@ import ir.thatsmejavad.mjmusic.core.contentProvider.projection.AudioProjectionIn
 
 fun Cursor.toAudioColumnsData() = AudioColumns(
     id = getLong(AudioProjectionIndexes.id),
-    data = getString(AudioProjectionIndexes.data),
     displayName = getString(AudioProjectionIndexes.displayName),
     title = getString(AudioProjectionIndexes.title),
     duration = getLong(AudioProjectionIndexes.duration),

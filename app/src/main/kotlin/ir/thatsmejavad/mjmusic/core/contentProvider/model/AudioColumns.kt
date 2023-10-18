@@ -2,7 +2,6 @@ package ir.thatsmejavad.mjmusic.core.contentProvider.model
 
 data class AudioColumns(
     val id: Long,
-    val data: String?,// Path to the audio file.
     val displayName: String?,
     val title: String?,
     val duration: Long,
@@ -11,7 +10,7 @@ data class AudioColumns(
     val albumId: Long,
     val album: String?,
     val albumArtist: String?,
-    val track: Int,// Track number of the audio within the album.
+    val track: Int,
     val year: Int,
     val composer: String?,
     val mimeType: String?,
