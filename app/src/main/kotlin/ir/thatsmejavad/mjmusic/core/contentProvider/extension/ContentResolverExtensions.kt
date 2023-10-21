@@ -55,8 +55,6 @@ fun ContentResolver.observeChanges(uri: Uri) = callbackFlow {
         }
     }
     registerContentObserver(uri, true, observer)
-    // trigger first
-    trySend(true)
     awaitClose {
         unregisterContentObserver(observer)
     }
