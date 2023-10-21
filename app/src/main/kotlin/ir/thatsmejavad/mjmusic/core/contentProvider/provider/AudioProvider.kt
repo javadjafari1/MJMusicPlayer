@@ -16,6 +16,16 @@ interface AudioProvider {
         ascending: Boolean = true,
         offset: Int = 0,
         limit: Int = Int.MAX_VALUE
+    ): List<AudioColumns>
+
+    fun observeSongs(
+        context: Context,
+        selection: String = "",
+        selectionArguments: Array<String>? = null,
+        order: String = MediaStore.Audio.Media.TITLE,
+        ascending: Boolean = true,
+        offset: Int = 0,
+        limit: Int = Int.MAX_VALUE
     ): Flow<List<AudioColumns>>
 
     fun getArtist(
@@ -26,9 +36,29 @@ interface AudioProvider {
         ascending: Boolean = true,
         offset: Int = 0,
         limit: Int = Int.MAX_VALUE
+    ): List<ArtistColumns>
+
+    fun observeArtist(
+        context: Context,
+        selection: String = "",
+        selectionArguments: Array<String>? = null,
+        order: String = MediaStore.Audio.Artists.ARTIST,
+        ascending: Boolean = true,
+        offset: Int = 0,
+        limit: Int = Int.MAX_VALUE
     ): Flow<List<ArtistColumns>>
 
     fun getAlbums(
+        context: Context,
+        selection: String = "",
+        selectionArguments: Array<String>? = null,
+        order: String = MediaStore.Audio.Albums.ALBUM,
+        ascending: Boolean = true,
+        offset: Int = 0,
+        limit: Int = Int.MAX_VALUE
+    ): List<AlbumColumns>
+
+    fun observeAlbums(
         context: Context,
         selection: String = "",
         selectionArguments: Array<String>? = null,
