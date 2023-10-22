@@ -11,9 +11,10 @@ data class SongWithArtists(
     @Embedded
     val song: SongEntity,
     @Relation(
+        entity = ArtistEntity::class,
         parentColumn = "song_id",
         entityColumn = "artist_id",
         associateBy = Junction(SongArtistCrossRefEntity::class)
     )
-    val artists: List<ArtistEntity>
+    val artists: List<ArtistEntity>,
 )

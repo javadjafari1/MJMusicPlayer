@@ -2,10 +2,10 @@ package ir.thatsmejavad.mjmusic.di
 
 import androidx.room.Room
 import ir.thatsmejavad.mjmusic.data.db.MJMusicDatabase
-import ir.thatsmejavad.mjmusic.data.db.dao.AlbumDao
-import ir.thatsmejavad.mjmusic.data.db.dao.ArtistDao
-import ir.thatsmejavad.mjmusic.data.db.dao.SongArtistCrossRefDao
-import ir.thatsmejavad.mjmusic.data.db.dao.SongDao
+import ir.thatsmejavad.mjmusic.data.db.daos.AlbumDao
+import ir.thatsmejavad.mjmusic.data.db.daos.ArtistDao
+import ir.thatsmejavad.mjmusic.data.db.daos.SongArtistCrossRefDao
+import ir.thatsmejavad.mjmusic.data.db.daos.SongDao
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
