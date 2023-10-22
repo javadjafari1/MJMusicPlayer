@@ -1,4 +1,4 @@
-package ir.thatsmejavad.mjmusic.data.db.dao
+package ir.thatsmejavad.mjmusic.data.db.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
