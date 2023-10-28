@@ -72,7 +72,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navigationVersion")
     implementation("androidx.navigation:navigation-common-ktx:$navigationVersion")
 
-    val roomVersion = "2.5.2"
+    val roomVersion = "2.6.0"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
