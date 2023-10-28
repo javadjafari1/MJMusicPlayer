@@ -51,6 +51,10 @@ android {
     }
 }
 
+ksp {
+    arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
+}
+
 detekt {
     autoCorrect = true
     config.setFrom(file("$rootDir/config/detekt/detekt.yml"))
@@ -80,4 +84,15 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
+}
+
+class RoomSchemaArgProvider(
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    val schemaDir: File
+) : CommandLineArgumentProvider {
+
+    override fun asArguments(): Iterable<String> {
+        return listOf("room.schemaLocation=${schemaDir.path}")
+    }
 }

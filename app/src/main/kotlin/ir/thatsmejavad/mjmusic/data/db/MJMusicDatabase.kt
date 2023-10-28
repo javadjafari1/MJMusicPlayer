@@ -23,6 +23,7 @@ import ir.thatsmejavad.mjmusic.data.db.entites.SongEntity
         SongArtistCrossRefEntity::class,
     ],
     version = 1,
+    exportSchema = true
 )
 abstract class MJMusicDatabase : RoomDatabase() {
     abstract fun getSongDao(): SongDao
