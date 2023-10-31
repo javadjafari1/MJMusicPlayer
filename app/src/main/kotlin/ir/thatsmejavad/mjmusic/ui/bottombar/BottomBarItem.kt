@@ -1,39 +1,50 @@
 package ir.thatsmejavad.mjmusic.ui.bottombar
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import ir.thatsmejavad.mjmusic.R
 import ir.thatsmejavad.mjmusic.core.ApplicationScreens
 
 sealed class BottomBarItem(
     val route: String,
-    val title: String,
-    val icon: Int,
-    val iconFocused: Int
+    @StringRes val title: Int,
+    @DrawableRes val icon: Int,
+    @DrawableRes val focusedIcon: Int
 ) {
     data object Home : BottomBarItem(
         route = ApplicationScreens.Home.route,
-        title = "Home",
+        title = R.string.label_home,
         icon = R.drawable.ic_bottom_bar_home,
-        iconFocused = R.drawable.ic_bottom_bar_home_focused
+        focusedIcon = R.drawable.ic_bottom_bar_home_focused
     )
 
     data object Search : BottomBarItem(
         route = ApplicationScreens.Search.route,
-        title = "Search",
+        title = R.string.label_search,
         icon = R.drawable.ic_bottom_bar_search,
-        iconFocused = R.drawable.ic_bottom_bar_search_focused
+        focusedIcon = R.drawable.ic_bottom_bar_search_focused
     )
 
     data object Music : BottomBarItem(
         route = ApplicationScreens.Music.route,
-        title = "Music",
+        title = R.string.label_music,
         icon = R.drawable.ic_bottom_bar_music,
-        iconFocused = R.drawable.ic_bottom_bar_music_focused
+        focusedIcon = R.drawable.ic_bottom_bar_music_focused
     )
 
     data object Setting : BottomBarItem(
         route = ApplicationScreens.Setting.route,
-        title = "Setting",
+        title = R.string.label_setting,
         icon = R.drawable.ic_bottom_bar_setting,
-        iconFocused = R.drawable.ic_bottom_bar_setting_focused
+        focusedIcon = R.drawable.ic_bottom_bar_setting_focused
     )
+
+    companion object {
+        val screens = listOf(
+            Home,
+            Search,
+            Music,
+            Setting
+        )
+    }
 }
