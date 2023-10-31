@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MJ Music</string>
+    <string name="label_home">Home</string>
+    <string name="label_search">Search</string>
+    <string name="label_music">Music</string>
+    <string name="label_setting">Setting</string>
 </resources>
