@@ -2,6 +2,11 @@ package ir.thatsmejavad.mjmusic.ui.bottombar
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +19,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,10 +74,25 @@ private fun RowScope.AddBottomBarItem(
     background: Color,
     onItemClick: () -> Unit
 ) {
+    val weight = remember { Animatable(if (selected) 1f else WEIGHT_7) }
+    val animSpec: TweenSpec<Float> = tween(
+        durationMillis = 300,
+        easing = LinearOutSlowInEasing
+    )
+
+    LaunchedEffect(selected) {
+        if (selected) {
+            weight.animateTo(1f, animSpec)
+        } else {
+            weight.animateTo(WEIGHT_7, animSpec)
+        }
+    }
+
     Row(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 18.dp)
-            .weight(if (selected) 1f else WEIGHT_7)
+            .heightIn(max = 44.dp)
+            .weight(weight.value)
             .clip(MaterialTheme.shapes.small)
             .background(background)
             .clickable(onClick = onItemClick)
@@ -86,7 +108,7 @@ private fun RowScope.AddBottomBarItem(
             painter = painterResource(icon),
             contentDescription = null
         )
-        if (selected) {
+        AnimatedVisibility(visible = selected) {
             Text(
                 text = stringResource(title),
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
