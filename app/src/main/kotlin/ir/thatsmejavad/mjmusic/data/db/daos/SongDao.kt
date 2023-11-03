@@ -10,7 +10,7 @@ import ir.thatsmejavad.mjmusic.data.db.relations.SongWithArtists
 
 @Dao
 interface SongDao {
-    @Insert(SongEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSongs(songs: List<SongEntity>)
 
     @Transaction

@@ -11,8 +11,8 @@ import ir.thatsmejavad.mjmusic.data.db.relations.AlbumWithSongs
 @Dao
 interface AlbumDao {
 
-    @Insert(AlbumEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAlbums(songs: List<AlbumEntity>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAlbums(albums: List<AlbumEntity>)
 
     @Transaction
     @Query("SELECT * FROM albums")

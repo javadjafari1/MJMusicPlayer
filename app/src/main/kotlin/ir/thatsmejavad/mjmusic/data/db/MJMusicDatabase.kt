@@ -8,7 +8,6 @@ import ir.thatsmejavad.mjmusic.data.db.daos.SongArtistCrossRefDao
 import ir.thatsmejavad.mjmusic.data.db.daos.SongDao
 import ir.thatsmejavad.mjmusic.data.db.entites.AlbumEntity
 import ir.thatsmejavad.mjmusic.data.db.entites.ArtistEntity
-import ir.thatsmejavad.mjmusic.data.db.entites.GenreEntity
 import ir.thatsmejavad.mjmusic.data.db.entites.PlaylistEntity
 import ir.thatsmejavad.mjmusic.data.db.entites.SongArtistCrossRefEntity
 import ir.thatsmejavad.mjmusic.data.db.entites.SongEntity
@@ -18,7 +17,6 @@ import ir.thatsmejavad.mjmusic.data.db.entites.SongEntity
         SongEntity::class,
         ArtistEntity::class,
         AlbumEntity::class,
-        GenreEntity::class,
         PlaylistEntity::class,
         SongArtistCrossRefEntity::class,
     ],
@@ -28,6 +26,6 @@ import ir.thatsmejavad.mjmusic.data.db.entites.SongEntity
 abstract class MJMusicDatabase : RoomDatabase() {
     abstract fun getSongDao(): SongDao
     abstract fun getAlbumDao(): AlbumDao
-    abstract fun getArtistsDao(): ArtistDao
+    abstract fun getArtistDao(): ArtistDao
     abstract fun getSongArtistCrossRefDao(): SongArtistCrossRefDao
 }

@@ -20,6 +20,6 @@ val databaseModule = module {
 
     single<SongDao> { get<MJMusicDatabase>().getSongDao() }
     single<AlbumDao> { get<MJMusicDatabase>().getAlbumDao() }
-    single<ArtistDao> { get<MJMusicDatabase>().getArtistsDao() }
+    single<ArtistDao> { get<MJMusicDatabase>().getArtistDao() }
     single<SongArtistCrossRefDao> { get<MJMusicDatabase>().getSongArtistCrossRefDao() }
 }
