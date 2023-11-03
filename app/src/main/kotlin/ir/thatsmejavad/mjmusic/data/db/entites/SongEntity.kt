@@ -9,16 +9,17 @@ data class SongEntity(
     @PrimaryKey
     @ColumnInfo("song_id")
     val id: Long,
-    val name: String,
+    val name: String?,
+    val title: String?,
     @ColumnInfo("album_id")
     val albumId: Long,
     @ColumnInfo(name = "mime_type")
-    val mimeType: String,
+    val mimeType: String?,
     @ColumnInfo(name = "added_date")
     val addedDate: Long,
     @ColumnInfo(name = "modified_date")
     val modifiedDate: Long,
-    val duration: Int,
+    val duration: Long,
     val year: Int,
     val size: Long,
     val track: Int,
