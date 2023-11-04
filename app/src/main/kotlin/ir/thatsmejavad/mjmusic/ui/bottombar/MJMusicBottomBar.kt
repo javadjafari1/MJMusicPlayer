@@ -3,6 +3,7 @@ package ir.thatsmejavad.mjmusic.ui.bottombar
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ir.thatsmejavad.mjmusic.R
 import ir.thatsmejavad.mjmusic.ui.theme.MJMusicTheme
 
 @Composable
@@ -50,7 +52,8 @@ fun MJMusicBottomBar(
         items.forEach { item ->
             val selected = currentBottomBarItem == item
             BottomBarItem(
-                icon = if (selected) item.focusedIcon else item.icon,
+                icon = item.icon,
+                focusedIcon = item.focusedIcon,
                 title = item.title,
                 selected = selected,
                 background = if (selected) {
@@ -69,6 +72,7 @@ fun MJMusicBottomBar(
 @Composable
 private fun BottomBarItem(
     @DrawableRes icon: Int,
+    @DrawableRes focusedIcon: Int,
     @StringRes title: Int,
     selected: Boolean,
     background: Color,
@@ -93,10 +97,16 @@ private fun BottomBarItem(
             alignment = Alignment.CenterHorizontally
         )
     ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = null
-        )
+        Crossfade(
+            targetState = selected,
+            label = stringResource(R.string.label_selected_item_animation)
+        ) { isSelected ->
+            val currentIcon = if (isSelected) focusedIcon else icon
+            Icon(
+                painter = painterResource(currentIcon),
+                contentDescription = null
+            )
+        }
         AnimatedVisibility(
             visible = selected,
             enter = fadeIn(tween(delayMillis = 100)) + expandHorizontally(),

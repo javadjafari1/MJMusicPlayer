@@ -4,4 +4,5 @@
     <string name="label_search">Search</string>
     <string name="label_music">Music</string>
     <string name="label_setting">Setting</string>
+    <string name="label_selected_item_animation">Selected Item Animation</string>
 </resources>
