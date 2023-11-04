@@ -13,8 +13,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ir.thatsmejavad.mjmusic.core.ApplicationScreens
 import ir.thatsmejavad.mjmusic.mainNavGraph
-import ir.thatsmejavad.mjmusic.ui.bottombar.BottomBar
 import ir.thatsmejavad.mjmusic.ui.bottombar.BottomBarItem
+import ir.thatsmejavad.mjmusic.ui.bottombar.BottomBarItem.Companion.getBottomBarItemForDestination
+import ir.thatsmejavad.mjmusic.ui.bottombar.MJMusicBottomBar
 import ir.thatsmejavad.mjmusic.ui.theme.MJMusicTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,12 +27,12 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     bottomBar = {
                         val navStackBackEntry by navController.currentBackStackEntryAsState()
-                        val currentDestination = navStackBackEntry?.destination?.route
-                        BottomBar(
-                            screens = BottomBarItem.screens,
-                            currentDestination = currentDestination,
-                            onItemClick = { route ->
-                                navController.navigate(route) {
+                        val currentDestination = navStackBackEntry?.destination
+                        MJMusicBottomBar(
+                            items = BottomBarItem.items,
+                            currentBottomBarItem = getBottomBarItemForDestination(currentDestination),
+                            onItemClick = { item ->
+                                navController.navigate(item.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
