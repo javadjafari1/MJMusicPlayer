@@ -2,6 +2,7 @@ package ir.thatsmejavad.mjmusic.ui.bottombar
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.navigation.NavDestination
 import ir.thatsmejavad.mjmusic.R
 import ir.thatsmejavad.mjmusic.core.ApplicationScreens
 
@@ -40,11 +41,21 @@ sealed class BottomBarItem(
     )
 
     companion object {
-        val screens = listOf(
+        val items = listOf(
             Home,
             Search,
             Music,
             Setting
         )
+
+        fun getBottomBarItemForDestination(destination: NavDestination?): BottomBarItem? {
+            return when (destination?.route) {
+                ApplicationScreens.Home.route -> Home
+                ApplicationScreens.Search.route -> Search
+                ApplicationScreens.Music.route -> Music
+                ApplicationScreens.Setting.route -> Setting
+                else -> null
+            }
+        }
     }
 }
