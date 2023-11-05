@@ -30,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ir.thatsmejavad.mjmusic.R
 import ir.thatsmejavad.mjmusic.ui.theme.MJMusicTheme
 
 @Composable
@@ -99,7 +98,7 @@ private fun BottomBarItem(
     ) {
         Crossfade(
             targetState = selected,
-            label = stringResource(R.string.label_selected_item_animation)
+            label = "Selected Item Animation"
         ) { isSelected ->
             val currentIcon = if (isSelected) focusedIcon else icon
             Icon(
@@ -134,4 +133,3 @@ private fun BottomBarPreview() {
         )
     }
 }
-
