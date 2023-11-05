@@ -9,6 +9,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -31,31 +32,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             MJMusicTheme {
-                val systemInDarkTheme = isSystemInDarkTheme()
-                SideEffect {
-                    enableEdgeToEdge(
-                        statusBarStyle = if (systemInDarkTheme) {
-                            SystemBarStyle.dark(
-                                scrim = Color.Transparent.toArgb()
-                            )
-                        } else {
-                            SystemBarStyle.light(
-                                scrim = Color.Transparent.toArgb(),
-                                darkScrim = Color.Black.copy(0.3f).toArgb()
-                            )
-                        },
-                        navigationBarStyle = if (systemInDarkTheme) {
-                            SystemBarStyle.dark(
-                                scrim = Color.Transparent.toArgb()
-                            )
-                        } else {
-                            SystemBarStyle.light(
-                                scrim = Color.Transparent.toArgb(),
-                                darkScrim = Color.Black.copy(0.3f).toArgb()
-                            )
-                        }
-                    )
-                }
+                ChangeSystemBarsColors()
 
                 Scaffold(
                     bottomBar = {
@@ -88,4 +65,38 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    @Composable
+    private fun ChangeSystemBarsColors() {
+        val systemInDarkTheme = isSystemInDarkTheme()
+        SideEffect {
+            enableEdgeToEdge(
+                statusBarStyle = if (systemInDarkTheme) {
+                    SystemBarStyle.dark(
+                        scrim = Color.Transparent.toArgb()
+                    )
+                } else {
+                    SystemBarStyle.light(
+                        scrim = Color.Transparent.toArgb(),
+                        darkScrim = Color.Black.copy(SCRIM_ALPHA_ON_BELOW_29).toArgb()
+                    )
+                },
+                navigationBarStyle = if (systemInDarkTheme) {
+                    SystemBarStyle.dark(
+                        scrim = Color.Transparent.toArgb()
+                    )
+                } else {
+                    SystemBarStyle.light(
+                        scrim = Color.Transparent.toArgb(),
+                        darkScrim = Color.Black.copy(SCRIM_ALPHA_ON_BELOW_29).toArgb()
+                    )
+                }
+            )
+        }
+    }
+
+    companion object {
+        private const val SCRIM_ALPHA_ON_BELOW_29 = 0.3f
+    }
 }
+
