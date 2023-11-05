@@ -1,4 +1,4 @@
-package ir.thatsmejavad.mjmusic.screens.home
+package ir.thatsmejavad.mjmusic.screens.setting
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
-fun HomeScreen(
+fun SettingScreen(
     navController: NavController
 ) {
     Box(
