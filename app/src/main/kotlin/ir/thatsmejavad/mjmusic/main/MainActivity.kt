@@ -10,11 +10,12 @@ import ir.thatsmejavad.mjmusic.mainNavGraph
 import ir.thatsmejavad.mjmusic.ui.theme.MJMusicTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            MJMusicTheme{
+            MJMusicTheme {
                 NavHost(
                     navController = navController,
                     startDestination = ApplicationScreens.Home.route
