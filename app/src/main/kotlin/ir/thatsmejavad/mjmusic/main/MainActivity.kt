@@ -70,27 +70,19 @@ class MainActivity : ComponentActivity() {
     private fun ChangeSystemBarsColors() {
         val systemInDarkTheme = isSystemInDarkTheme()
         SideEffect {
+            val systemBarStyle = if (systemInDarkTheme) {
+                SystemBarStyle.dark(
+                    scrim = Color.Transparent.toArgb()
+                )
+            } else {
+                SystemBarStyle.light(
+                    scrim = Color.Transparent.toArgb(),
+                    darkScrim = Color.Black.copy(SCRIM_ALPHA_ON_BELOW_29).toArgb()
+                )
+            }
             enableEdgeToEdge(
-                statusBarStyle = if (systemInDarkTheme) {
-                    SystemBarStyle.dark(
-                        scrim = Color.Transparent.toArgb()
-                    )
-                } else {
-                    SystemBarStyle.light(
-                        scrim = Color.Transparent.toArgb(),
-                        darkScrim = Color.Black.copy(SCRIM_ALPHA_ON_BELOW_29).toArgb()
-                    )
-                },
-                navigationBarStyle = if (systemInDarkTheme) {
-                    SystemBarStyle.dark(
-                        scrim = Color.Transparent.toArgb()
-                    )
-                } else {
-                    SystemBarStyle.light(
-                        scrim = Color.Transparent.toArgb(),
-                        darkScrim = Color.Black.copy(SCRIM_ALPHA_ON_BELOW_29).toArgb()
-                    )
-                }
+                statusBarStyle = systemBarStyle,
+                navigationBarStyle = systemBarStyle
             )
         }
     }
