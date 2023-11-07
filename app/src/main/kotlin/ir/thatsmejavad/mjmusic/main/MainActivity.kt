@@ -11,6 +11,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import ir.thatsmejavad.mjmusic.core.ApplicationScreens
 import ir.thatsmejavad.mjmusic.mainNavGraph
 import ir.thatsmejavad.mjmusic.ui.bottombar.BottomBarItem
@@ -19,10 +22,12 @@ import ir.thatsmejavad.mjmusic.ui.bottombar.MJMusicBottomBar
 import ir.thatsmejavad.mjmusic.ui.theme.MJMusicTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterialNavigationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
+            val bottomSheetNavigator = rememberBottomSheetNavigator()
+            val navController = rememberNavController(bottomSheetNavigator)
             MJMusicTheme {
                 Scaffold(
                     bottomBar = {
@@ -43,12 +48,14 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { padding ->
-                    NavHost(
-                        modifier = Modifier.padding(padding),
-                        navController = navController,
-                        startDestination = ApplicationScreens.Home.route
-                    ) {
-                        mainNavGraph(navController)
+                    ModalBottomSheetLayout(bottomSheetNavigator = bottomSheetNavigator) {
+                        NavHost(
+                            modifier = Modifier.padding(padding),
+                            navController = navController,
+                            startDestination = ApplicationScreens.Home.route
+                        ) {
+                            mainNavGraph(navController)
+                        }
                     }
                 }
             }
