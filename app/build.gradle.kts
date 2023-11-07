@@ -84,6 +84,9 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
+
+    //accompanist
+    implementation("com.google.accompanist:accompanist-navigation-material:0.32.0")
 }
 
 class RoomSchemaArgProvider(
