@@ -87,6 +87,7 @@ dependencies {
 
     //accompanist
     implementation("com.google.accompanist:accompanist-navigation-material:0.32.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
     //Media3
     implementation("androidx.media3:media3-exoplayer:1.2.0")
