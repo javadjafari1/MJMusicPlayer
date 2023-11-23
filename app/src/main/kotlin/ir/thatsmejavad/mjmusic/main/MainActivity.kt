@@ -7,15 +7,19 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.dp
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -45,6 +49,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             val bottomSheetNavigator = rememberBottomSheetNavigator()
             val navController = rememberNavController(bottomSheetNavigator)
+            val arePermissionsGranted by rememberSaveable {
+                mutableStateOf(false)
+            }
             MJMusicTheme {
                 ChangeSystemBarsColors()
 
@@ -52,27 +59,36 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         val navStackBackEntry by navController.currentBackStackEntryAsState()
                         val currentDestination = navStackBackEntry?.destination
-                        MJMusicBottomBar(
-                            modifier = Modifier.navigationBarsPadding(),
-                            items = BottomBarItem.items,
-                            currentBottomBarItem = getBottomBarItemForDestination(currentDestination),
-                            onItemClick = { item ->
-                                navController.navigate(item.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+                        if (currentDestination?.route != ApplicationScreens.Permissions.route) {
+                            MJMusicBottomBar(
+                                modifier = Modifier.navigationBarsPadding(),
+                                items = BottomBarItem.items,
+                                currentBottomBarItem = getBottomBarItemForDestination(
+                                    currentDestination
+                                ),
+                                onItemClick = { item ->
+                                    navController.navigate(item.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
                                 }
-                            }
-                        )
-                    }
+                            )
+                        }
+                    },
+                    contentWindowInsets = WindowInsets(top = 0.dp)
                 ) { padding ->
                     ModalBottomSheetLayout(bottomSheetNavigator = bottomSheetNavigator) {
                         NavHost(
                             modifier = Modifier.padding(padding),
                             navController = navController,
-                            startDestination = ApplicationScreens.Home.route
+                            startDestination = if (arePermissionsGranted) {
+                                ApplicationScreens.Home.route
+                            } else {
+                                ApplicationScreens.Permissions.route
+                            }
                         ) {
                             mainNavGraph(navController)
                         }

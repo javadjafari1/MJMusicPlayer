@@ -4,4 +4,16 @@
     <string name="label_search">Search</string>
     <string name="label_music">Music</string>
     <string name="label_setting">Setting</string>
+    <string name="label_storage_access">1.Storage Access:</string>
+    <string name="label_storage_access_description">We need access to your device\'s storage to play your music files.</string>
+    <string name="label_media_library_access">2.Media Library Access:</string>
+    <string name="label_media_library_access_description">Allow us to access your media library to organize and display your music.</string>
+    <string name="label_notification_access">3.Notification Access:</string>
+    <string name="label_notification_access_description">Allow us to access your notifications to display music controls on your lock screen.</string>
+    <string name="label_phone_status_and_identity">4.Phone Status and Identity:</string>
+    <string name="label_phone_status_description">Access to phone status is used to pause music during phone calls.</string>
+    <string name="label_bluetooth_access">5.Bluetooth Access:</string>
+    <string name="label_bluetooth_access_description">Bluetooth access is required to connect with audio devices.</string>
+    <string name="label_allow">Allow</string>
+    <string name="label_permissions">Permissions</string>
 </resources>
