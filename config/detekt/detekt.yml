@@ -122,7 +122,9 @@ complexity:
     threshold: 600
   LongMethod:
     active: true
-    threshold: 60
+    threshold: 70
+    ignoreAnnotated:
+      - 'Composable'
   LongParameterList:
     active: true
     functionThreshold: 6

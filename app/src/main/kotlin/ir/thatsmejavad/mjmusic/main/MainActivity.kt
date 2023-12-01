@@ -1,6 +1,7 @@
 package ir.thatsmejavad.mjmusic.main
 
 import android.content.ComponentName
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -12,14 +13,14 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -33,6 +34,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import ir.thatsmejavad.mjmusic.core.ApplicationScreens
 import ir.thatsmejavad.mjmusic.core.audioPlayer.PlaybackService
+import ir.thatsmejavad.mjmusic.enums.getPermissionsList
 import ir.thatsmejavad.mjmusic.mainNavGraph
 import ir.thatsmejavad.mjmusic.ui.bottombar.BottomBarItem
 import ir.thatsmejavad.mjmusic.ui.bottombar.BottomBarItem.Companion.getBottomBarItemForDestination
@@ -49,9 +51,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val bottomSheetNavigator = rememberBottomSheetNavigator()
             val navController = rememberNavController(bottomSheetNavigator)
-            val arePermissionsGranted by rememberSaveable {
-                mutableStateOf(false)
-            }
+
             MJMusicTheme {
                 ChangeSystemBarsColors()
 
@@ -84,13 +84,20 @@ class MainActivity : ComponentActivity() {
                         NavHost(
                             modifier = Modifier.padding(padding),
                             navController = navController,
-                            startDestination = if (arePermissionsGranted) {
-                                ApplicationScreens.Home.route
-                            } else {
-                                ApplicationScreens.Permissions.route
-                            }
+                            startDestination = ApplicationScreens.Home.route
                         ) {
                             mainNavGraph(navController)
+                        }
+
+                        LaunchedEffect(Unit) {
+                            checkPermissions {
+                                navController.navigate(ApplicationScreens.Permissions.route) {
+                                    launchSingleTop = true
+                                    popUpTo(ApplicationScreens.Home.route) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -101,11 +108,23 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         setupMediaController()
-     }
+    }
 
     override fun onStop() {
         super.onStop()
         MediaController.releaseFuture(controllerFuture)
+    }
+
+    private fun checkPermissions(navigateToPermissionsScreen: () -> Unit) {
+        getPermissionsList().forEach { permission ->
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                navigateToPermissionsScreen()
+            }
+        }
     }
 
     @Composable
