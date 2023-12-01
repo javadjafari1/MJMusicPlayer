@@ -86,8 +86,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
 
     //accompanist
-    implementation("com.google.accompanist:accompanist-navigation-material:0.32.0")
-    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+    val accompanistVersion = "0.32.0"
+    implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-permissions:$accompanistVersion")
 
     //Media3
     implementation("androidx.media3:media3-exoplayer:1.2.0")
