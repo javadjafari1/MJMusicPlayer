@@ -93,6 +93,7 @@ dependencies {
     //Media3
     implementation("androidx.media3:media3-exoplayer:1.2.0")
     implementation("androidx.media3:media3-session:1.2.0")
+    implementation("androidx.media3:media3-common:1.2.0")
 }
 
 class RoomSchemaArgProvider(

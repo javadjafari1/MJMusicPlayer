@@ -1,5 +1,7 @@
 package ir.thatsmejavad.mjmusic.screens.music
 
+import android.net.Uri
+import android.provider.MediaStore
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,22 +29,35 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import ir.thatsmejavad.mjmusic.R
+import ir.thatsmejavad.mjmusic.core.audioPlayer.AudioEvent
+import ir.thatsmejavad.mjmusic.core.audioPlayer.AudioHandler
+import ir.thatsmejavad.mjmusic.core.contentProvider.model.AudioColumns
+import ir.thatsmejavad.mjmusic.core.contentProvider.provider.AudioProviderImpl
+import ir.thatsmejavad.mjmusic.utils.noRippleClickable
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MusicScreen(
-    navController: NavController
+    navController: NavController,
+    audioHandler: AudioHandler = koinInject()
 ) {
     val tabLabels = listOf(
         "Albums",
@@ -55,6 +70,13 @@ fun MusicScreen(
 
     val pagerState = rememberPagerState { tabLabels.size }
     val coroutineScope = rememberCoroutineScope()
+
+    val context = LocalContext.current
+    val audioProviderImpl = AudioProviderImpl()
+
+    val songs by remember {
+        mutableStateOf(audioProviderImpl.getSongs(context))
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -105,17 +127,7 @@ fun MusicScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                if (page == 0) {
-                    val songList = mutableListOf<SongModel>()
-                    songList.add(SongModel("The girl", "Homa Shafiei", false))
-                    songList.add(SongModel("The girl", "Homa Shafiei", false))
-                    songList.add(SongModel("The girl", "Homa Shafiei", true))
-                    songList.add(SongModel("The girl", "Homa Shafiei", false))
-                    songList.add(SongModel("The girl", "Homa Shafiei", false))
-                    songList.add(SongModel("The girl", "Homa Shafiei", false))
-                    songList.add(SongModel("The girl", "Homa Shafiei", false))
-                    songList.add(SongModel("The girl", "Homa Shafiei", false))
-
+                if (page == 2) {
                     Column(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
@@ -149,7 +161,7 @@ fun MusicScreen(
                                 contentDescription = "image-cover"
                             )
                             Text(
-                                text = " Songs",
+                                text = " ${songs.count()} Songs",
                                 style = typography.bodyMedium
                             )
                         }
@@ -158,9 +170,14 @@ fun MusicScreen(
                                 .fillMaxSize()
                                 .verticalScroll(rememberScrollState()),
                         ) {
-                            songList.forEach { song ->
+                            songs.forEach { song ->
                                 SongItem(song = song) {
-
+                                    val audioUri = Uri.withAppendedPath(
+                                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                        song.id.toString()
+                                    )
+                                    audioHandler.addMediaItem(MediaItem.fromUri(audioUri))
+                                    audioHandler.setEvent(AudioEvent.PlayPause)
                                 }
                             }
                         }
@@ -175,7 +192,7 @@ fun MusicScreen(
 
 @Composable
 fun SongItem(
-    song: SongModel,
+    song: AudioColumns,
     onSongClick: () -> Unit
 ) {
     val backgroundColor = if (song.isSelected) {
@@ -202,7 +219,7 @@ fun SongItem(
                 modifier = Modifier
                     .padding(8.dp)
                     .clip(shape = RoundedCornerShape(8.dp))
-                    .size(64.dp),
+                    .size(56.dp),
                 painter = painterResource(R.drawable.ic_bottom_bar_music),
                 contentScale = ContentScale.Crop,
                 contentDescription = "image-cover"
@@ -212,13 +229,14 @@ fun SongItem(
                 modifier = Modifier.padding(4.dp)
             ) {
                 Text(
-                    text = song.title,
-                    style = typography.bodyLarge,
+                    text = song.title ?: "",
+                    style = typography.bodySmall,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = song.artist,
+                    text = song.artist ?: "",
                     style = typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -229,7 +247,7 @@ fun SongItem(
                 .clip(shape = RoundedCornerShape(8.dp))
                 .padding(horizontal = 8.dp)
                 .size(24.dp)
-                .clickable { },
+                .noRippleClickable {},
             painter = painterResource(R.drawable.ic_favorit),
             tint = MaterialTheme.colorScheme.onSurface,
             contentDescription = "image-cover"
@@ -239,16 +257,10 @@ fun SongItem(
                 .padding(horizontal = 8.dp)
                 .clip(shape = RoundedCornerShape(8.dp))
                 .size(24.dp)
-                .clickable { },
+                .noRippleClickable { },
             painter = painterResource(R.drawable.ic_more),
             tint = MaterialTheme.colorScheme.onSurface,
             contentDescription = "image-cover"
         )
     }
 }
-
-data class SongModel(
-    val title: String,
-    val artist: String,
-    val isSelected: Boolean
-)
