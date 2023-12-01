@@ -1,5 +1,6 @@
 package ir.thatsmejavad.mjmusic.main
 
+import android.content.ComponentName
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -15,6 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -22,7 +25,10 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import com.google.common.util.concurrent.ListenableFuture
+import com.google.common.util.concurrent.MoreExecutors
 import ir.thatsmejavad.mjmusic.core.ApplicationScreens
+import ir.thatsmejavad.mjmusic.core.audioPlayer.PlaybackService
 import ir.thatsmejavad.mjmusic.mainNavGraph
 import ir.thatsmejavad.mjmusic.ui.bottombar.BottomBarItem
 import ir.thatsmejavad.mjmusic.ui.bottombar.BottomBarItem.Companion.getBottomBarItemForDestination
@@ -30,6 +36,9 @@ import ir.thatsmejavad.mjmusic.ui.bottombar.MJMusicBottomBar
 import ir.thatsmejavad.mjmusic.ui.theme.MJMusicTheme
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var controllerFuture: ListenableFuture<MediaController>
+
     @OptIn(ExperimentalMaterialNavigationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +82,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        setupMediaController()
+     }
+
+    override fun onStop() {
+        super.onStop()
+        MediaController.releaseFuture(controllerFuture)
+    }
+
     @Composable
     private fun ChangeSystemBarsColors() {
         val systemInDarkTheme = isSystemInDarkTheme()
@@ -94,8 +113,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun setupMediaController() {
+        val sessionToken = SessionToken(
+            this,
+            ComponentName(this, PlaybackService::class.java)
+        )
+        controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
+        controllerFuture.addListener({}, MoreExecutors.directExecutor())
+    }
+
     companion object {
         private const val SCRIM_ALPHA_ON_BELOW_29 = 0.3f
     }
 }
-
