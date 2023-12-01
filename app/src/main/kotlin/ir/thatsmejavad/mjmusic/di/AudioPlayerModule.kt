@@ -14,7 +14,5 @@ val audioPlayerModule = module {
             .build()
     }
 
-    single<AudioHandler> {
-        AudioHandlerImpl(get())
-    }
+    single { AudioHandlerImpl(get()) } bind AudioHandler::class
 }
