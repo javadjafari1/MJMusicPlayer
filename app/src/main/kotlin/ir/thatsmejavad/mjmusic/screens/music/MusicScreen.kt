@@ -3,7 +3,6 @@ package ir.thatsmejavad.mjmusic.screens.music
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -20,7 +19,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.ScrollableTabRow
@@ -30,15 +34,17 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -49,7 +55,6 @@ import ir.thatsmejavad.mjmusic.core.audioPlayer.AudioEvent
 import ir.thatsmejavad.mjmusic.core.audioPlayer.AudioHandler
 import ir.thatsmejavad.mjmusic.core.contentProvider.model.AudioColumns
 import ir.thatsmejavad.mjmusic.core.contentProvider.provider.AudioProviderImpl
-import ir.thatsmejavad.mjmusic.utils.noRippleClickable
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -60,12 +65,12 @@ fun MusicScreen(
     audioHandler: AudioHandler = koinInject()
 ) {
     val tabLabels = listOf(
-        "Albums",
-        "Artists",
-        "Songs",
-        "Playlists",
-        "Genres",
-        "Folders",
+        stringResource(R.string.label_albums),
+        stringResource(R.string.label_artists),
+        stringResource(R.string.label_songs),
+        stringResource(R.string.label_playlists),
+        stringResource(R.string.label_genres),
+        stringResource(R.string.label_folders),
     )
 
     val pagerState = rememberPagerState { tabLabels.size }
@@ -77,6 +82,8 @@ fun MusicScreen(
     val songs by remember {
         mutableStateOf(audioProviderImpl.getSongs(context))
     }
+
+    var selectedSongId by remember { mutableLongStateOf(0) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -171,13 +178,17 @@ fun MusicScreen(
                                 .verticalScroll(rememberScrollState()),
                         ) {
                             songs.forEach { song ->
-                                SongItem(song = song) {
+                                SongItem(
+                                    song = song,
+                                    selectedSongId = selectedSongId,
+                                ) {
                                     val audioUri = Uri.withAppendedPath(
                                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                                         song.id.toString()
                                     )
                                     audioHandler.addMediaItem(MediaItem.fromUri(audioUri))
                                     audioHandler.setEvent(AudioEvent.PlayPause)
+                                    selectedSongId = song.id
                                 }
                             }
                         }
@@ -193,14 +204,16 @@ fun MusicScreen(
 @Composable
 fun SongItem(
     song: AudioColumns,
+    selectedSongId: Long,
     onSongClick: () -> Unit
 ) {
-    val backgroundColor = if (song.isSelected) {
+    val backgroundColor = if (song.id == selectedSongId) {
         MaterialTheme.colorScheme.inversePrimary
     } else {
         MaterialTheme.colorScheme.surface
     }
     Row(
+        modifier = Modifier.padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
@@ -212,18 +225,21 @@ fun SongItem(
                     shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
                 )
                 .weight(1f)
-                .clickable(onClick = onSongClick),
+                .clickable(onClick = {
+                    onSongClick()
+                }),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(shape = RoundedCornerShape(8.dp))
-                    .size(56.dp),
-                painter = painterResource(R.drawable.ic_bottom_bar_music),
-                contentScale = ContentScale.Crop,
-                contentDescription = "image-cover"
-            )
+            IconButton(
+                modifier = Modifier.padding(8.dp),
+                onClick = { }
+            ) {
+                Icon(
+                    modifier = Modifier.size(42.dp),
+                    imageVector = Icons.Outlined.PlayArrow,
+                    contentDescription = "PlayArrow"
+                )
+            }
 
             Column(
                 modifier = Modifier.padding(4.dp)
@@ -242,25 +258,21 @@ fun SongItem(
                 )
             }
         }
-        Icon(
-            modifier = Modifier
-                .clip(shape = RoundedCornerShape(8.dp))
-                .padding(horizontal = 8.dp)
-                .size(24.dp)
-                .noRippleClickable {},
-            painter = painterResource(R.drawable.ic_favorit),
-            tint = MaterialTheme.colorScheme.onSurface,
-            contentDescription = "image-cover"
-        )
-        Icon(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .clip(shape = RoundedCornerShape(8.dp))
-                .size(24.dp)
-                .noRippleClickable { },
-            painter = painterResource(R.drawable.ic_more),
-            tint = MaterialTheme.colorScheme.onSurface,
-            contentDescription = "image-cover"
-        )
+        IconButton(
+            onClick = { }
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.FavoriteBorder,
+                contentDescription = "Favorite"
+            )
+        }
+        IconButton(
+            onClick = { }
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.MoreVert,
+                contentDescription = "more"
+            )
+        }
     }
 }

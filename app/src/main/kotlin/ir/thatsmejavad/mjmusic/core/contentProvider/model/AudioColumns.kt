@@ -23,5 +23,4 @@ data class AudioColumns(
     val dateAdded: String?,
     val dateModified: String?,
     val isDrm: String?,
-    val isSelected: Boolean = false,
 )
