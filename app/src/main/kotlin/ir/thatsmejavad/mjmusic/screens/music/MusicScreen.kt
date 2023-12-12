@@ -55,14 +55,52 @@ import ir.thatsmejavad.mjmusic.core.audioPlayer.AudioEvent
 import ir.thatsmejavad.mjmusic.core.audioPlayer.AudioHandler
 import ir.thatsmejavad.mjmusic.core.contentProvider.model.AudioColumns
 import ir.thatsmejavad.mjmusic.core.contentProvider.provider.AudioProviderImpl
+import ir.thatsmejavad.mjmusic.screens.music.MusicAction.OnAudioSelect
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+
+@Composable
+fun MusicScreen(
+    navController: NavController,
+) {
+    MusicScreen(
+        navController = navController,
+        audioHandler = koinInject()
+    )
+}
+
+@Composable
+fun MusicScreen(
+    navController: NavController,
+    audioHandler: AudioHandler,
+) {
+    var selectedSongId by remember { mutableLongStateOf(0) }
+
+    MusicScreen(
+        navController = navController,
+        selectedSongId = selectedSongId
+    ) { action ->
+        when (action) {
+            is OnAudioSelect -> {
+                val audioUri = Uri.withAppendedPath(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    action.song.id.toString()
+                )
+                selectedSongId = action.song.id
+                audioHandler.addMediaItem(MediaItem.fromUri(audioUri))
+                audioHandler.setEvent(AudioEvent.PlayPause)
+            }
+        }
+    }
+}
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MusicScreen(
     navController: NavController,
-    audioHandler: AudioHandler = koinInject()
+    selectedSongId: Long,
+    onAction: (MusicAction) -> Unit
 ) {
     val tabLabels = listOf(
         stringResource(R.string.label_albums),
@@ -82,8 +120,6 @@ fun MusicScreen(
     val songs by remember {
         mutableStateOf(audioProviderImpl.getSongs(context))
     }
-
-    var selectedSongId by remember { mutableLongStateOf(0) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -182,13 +218,7 @@ fun MusicScreen(
                                     song = song,
                                     selectedSongId = selectedSongId,
                                 ) {
-                                    val audioUri = Uri.withAppendedPath(
-                                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                                        song.id.toString()
-                                    )
-                                    audioHandler.addMediaItem(MediaItem.fromUri(audioUri))
-                                    audioHandler.setEvent(AudioEvent.PlayPause)
-                                    selectedSongId = song.id
+                                    onAction(OnAudioSelect(song))
                                 }
                             }
                         }
