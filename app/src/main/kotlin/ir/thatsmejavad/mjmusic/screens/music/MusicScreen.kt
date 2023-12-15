@@ -5,6 +5,7 @@ import android.provider.MediaStore
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,11 +15,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.MoreVert
@@ -27,10 +29,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.ScrollableTabRow
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,7 +44,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
@@ -56,6 +53,7 @@ import ir.thatsmejavad.mjmusic.core.audioPlayer.AudioHandler
 import ir.thatsmejavad.mjmusic.core.contentProvider.model.AudioColumns
 import ir.thatsmejavad.mjmusic.core.contentProvider.provider.AudioProviderImpl
 import ir.thatsmejavad.mjmusic.screens.music.MusicAction.OnAudioSelect
+import ir.thatsmejavad.mjmusic.ui.common.ScrollableTabBar
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -75,9 +73,17 @@ fun MusicScreen(
     audioHandler: AudioHandler,
 ) {
     var selectedSongId by remember { mutableLongStateOf(0) }
+    val audioProviderImpl = AudioProviderImpl()
+
+    val context = LocalContext.current
+    val songs by remember {
+        mutableStateOf(audioProviderImpl.getSongs(context))
+    }
+
 
     MusicScreen(
         navController = navController,
+        songs = songs,
         selectedSongId = selectedSongId
     ) { action ->
         when (action) {
@@ -99,6 +105,7 @@ fun MusicScreen(
 @Composable
 fun MusicScreen(
     navController: NavController,
+    songs: List<AudioColumns>,
     selectedSongId: Long,
     onAction: (MusicAction) -> Unit
 ) {
@@ -114,57 +121,22 @@ fun MusicScreen(
     val pagerState = rememberPagerState { tabLabels.size }
     val coroutineScope = rememberCoroutineScope()
 
-    val context = LocalContext.current
-    val audioProviderImpl = AudioProviderImpl()
-
-    val songs by remember {
-        mutableStateOf(audioProviderImpl.getSongs(context))
-    }
-
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        ScrollableTabRow(
-            modifier = Modifier.padding(8.dp),
+        ScrollableTabBar(
+            labels = tabLabels,
             selectedTabIndex = pagerState.currentPage,
-            edgePadding = 0.dp,
-            divider = {},
-            indicator = { tabPositions ->
-                TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                )
-            },
-        ) {
-            tabLabels.forEachIndexed { index, title ->
-                val selectedTab = pagerState.currentPage == index
-                Tab(
-                    modifier = Modifier.clip(MaterialTheme.shapes.small),
-                    selected = selectedTab,
-                    onClick = {
-                        coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                    },
-                    text = {
-                        Text(
-                            text = title,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            color = if (selectedTab) {
-                                MaterialTheme.colorScheme.surfaceTint
-                            } else {
-                                MaterialTheme.colorScheme.onBackground
-                            },
-                        )
-                    }
-                )
+            onTabClicked = { index ->
+                coroutineScope.launch { pagerState.animateScrollToPage(index) }
             }
-        }
+        )
 
         HorizontalPager(
-            state = pagerState,
-            userScrollEnabled = true,
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            state = pagerState
         ) { page ->
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -175,52 +147,52 @@ fun MusicScreen(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         Row(
-                            modifier = Modifier.padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = "Name",
-                                style = typography.bodyMedium
-                            )
-                            Icon(
-                                modifier = Modifier
-                                    .clip(shape = RoundedCornerShape(8.dp))
-                                    .padding(horizontal = 4.dp)
-                                    .size(20.dp)
-                                    .clickable { },
-                                painter = painterResource(R.drawable.ic_arrow_top),
-                                tint = MaterialTheme.colorScheme.onSurface,
-                                contentDescription = "image-cover"
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            Icon(
-                                modifier = Modifier
-                                    .clip(shape = RoundedCornerShape(8.dp))
-                                    .padding(horizontal = 4.dp)
-                                    .size(24.dp)
-                                    .clickable { },
-                                painter = painterResource(R.drawable.ic_shuffle),
-                                tint = MaterialTheme.colorScheme.onSurface,
-                                contentDescription = "image-cover"
-                            )
-                            Text(
-                                text = " ${songs.count()} Songs",
-                                style = typography.bodyMedium
-                            )
-                        }
-                        Column(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState()),
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            songs.forEach { song ->
-                                SongItem(
-                                    song = song,
-                                    selectedSongId = selectedSongId,
-                                ) {
-                                    onAction(OnAudioSelect(song))
-                                }
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = "Name",
+                                    style = typography.bodyMedium
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_arrow_top),
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                    contentDescription = "sort"
+                                )
                             }
+
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    modifier = Modifier.align(Alignment.CenterVertically),
+                                    painter = painterResource(R.drawable.ic_shuffle),
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                    contentDescription = "shuffle"
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = " ${songs.count()} Songs",
+                                    style = typography.bodyMedium
+                                )
+                            }
+                        }
+
+                        LazyColumn {
+                            items(
+                                items = songs,
+                                itemContent = { song ->
+                                    SongItem(
+                                        song = song,
+                                        selectedSongId = selectedSongId,
+                                    ) {
+                                        onAction(OnAudioSelect(song))
+                                    }
+                                }
+                            )
                         }
                     }
                 } else {
@@ -267,7 +239,7 @@ fun SongItem(
                 Icon(
                     modifier = Modifier.size(42.dp),
                     imageVector = Icons.Outlined.PlayArrow,
-                    contentDescription = "PlayArrow"
+                    contentDescription = "play-arrow"
                 )
             }
 
@@ -288,14 +260,16 @@ fun SongItem(
                 )
             }
         }
+
         IconButton(
             onClick = { }
         ) {
             Icon(
                 imageVector = Icons.Outlined.FavoriteBorder,
-                contentDescription = "Favorite"
+                contentDescription = "favorite"
             )
         }
+
         IconButton(
             onClick = { }
         ) {
