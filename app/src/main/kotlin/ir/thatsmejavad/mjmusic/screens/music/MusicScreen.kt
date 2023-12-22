@@ -22,9 +22,9 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -54,6 +54,7 @@ import ir.thatsmejavad.mjmusic.core.contentProvider.model.AudioColumns
 import ir.thatsmejavad.mjmusic.core.contentProvider.provider.AudioProviderImpl
 import ir.thatsmejavad.mjmusic.screens.music.MusicAction.OnAudioSelect
 import ir.thatsmejavad.mjmusic.ui.common.ScrollableTabBar
+import ir.thatsmejavad.mjmusic.ui.common.getMusicCategories
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -76,6 +77,8 @@ fun MusicScreen(
     val audioProviderImpl = AudioProviderImpl()
 
     val context = LocalContext.current
+
+    //TODO we should be change later, this is just for test UI
     val songs by remember {
         mutableStateOf(audioProviderImpl.getSongs(context))
     }
@@ -109,15 +112,8 @@ fun MusicScreen(
     selectedSongId: Long,
     onAction: (MusicAction) -> Unit
 ) {
-    val tabLabels = listOf(
-        stringResource(R.string.label_albums),
-        stringResource(R.string.label_artists),
-        stringResource(R.string.label_songs),
-        stringResource(R.string.label_playlists),
-        stringResource(R.string.label_genres),
-        stringResource(R.string.label_folders),
-    )
-
+    val context = LocalContext.current
+    val tabLabels = context.getMusicCategories()
     val pagerState = rememberPagerState { tabLabels.size }
     val coroutineScope = rememberCoroutineScope()
 
@@ -142,7 +138,7 @@ fun MusicScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                if (page == 2) {
+                if (tabLabels[page] == stringResource(R.string.label_songs)) {
                     Column(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
@@ -158,7 +154,9 @@ fun MusicScreen(
                                     text = "Name",
                                     style = typography.bodyMedium
                                 )
+
                                 Spacer(modifier = Modifier.width(8.dp))
+
                                 Icon(
                                     painter = painterResource(R.drawable.ic_arrow_top),
                                     tint = MaterialTheme.colorScheme.onSurface,
@@ -173,7 +171,9 @@ fun MusicScreen(
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     contentDescription = "shuffle"
                                 )
+
                                 Spacer(modifier = Modifier.width(8.dp))
+
                                 Text(
                                     text = " ${songs.count()} Songs",
                                     style = typography.bodyMedium
@@ -214,51 +214,51 @@ fun SongItem(
     } else {
         MaterialTheme.colorScheme.surface
     }
-    Row(
-        modifier = Modifier.padding(vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(start = 8.dp, end = 32.dp)
-                .clip(shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
-                .background(
-                    color = backgroundColor,
-                    shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
-                )
-                .weight(1f)
-                .clickable(onClick = {
-                    onSongClick()
-                }),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(
-                modifier = Modifier.padding(8.dp),
-                onClick = { }
-            ) {
-                Icon(
-                    modifier = Modifier.size(42.dp),
-                    imageVector = Icons.Outlined.PlayArrow,
-                    contentDescription = "play-arrow"
-                )
-            }
 
-            Column(
-                modifier = Modifier.padding(4.dp)
-            ) {
-                Text(
-                    text = song.title ?: "",
-                    style = typography.bodySmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = song.artist ?: "",
-                    style = typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp)
+            .clip(shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
+            .background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
+            )
+            .clickable(onClick = {
+                onSongClick()
+            }),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        //TODO we need change this icon
+        IconButton(
+            modifier = Modifier.padding(8.dp),
+            onClick = { }
+        ) {
+            Icon(
+                modifier = Modifier.size(42.dp),
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = "play-arrow"
+            )
+        }
+
+        Column(
+            modifier = Modifier.padding(4.dp).weight(1f)
+        ) {
+            Text(
+                text = song.title ?: "",
+                style = typography.bodySmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = song.artist ?: "",
+                style = typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
 
         IconButton(
