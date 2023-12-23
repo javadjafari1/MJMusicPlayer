@@ -86,6 +86,14 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
 
     //accompanist
+    implementation("com.google.accompanist:accompanist-navigation-material:0.32.0")
+
+    //Media3
+    implementation("androidx.media3:media3-exoplayer:1.2.0")
+    implementation("androidx.media3:media3-session:1.2.0")
+    implementation("androidx.media3:media3-common:1.2.0")
+    implementation("androidx.media3:media3-exoplayer:1.1.1")
+    implementation("androidx.media3:media3-session:1.1.1")
     val accompanistVersion = "0.32.0"
     implementation("com.google.accompanist:accompanist-navigation-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-permissions:$accompanistVersion")
@@ -93,6 +101,14 @@ dependencies {
     //Media3
     implementation("androidx.media3:media3-exoplayer:1.2.0")
     implementation("androidx.media3:media3-session:1.2.0")
+    implementation("androidx.media3:media3-common:1.2.0")
+    implementation("androidx.media3:media3-exoplayer:1.1.1")
+    implementation("androidx.media3:media3-session:1.1.1")
+
+    //Media3
+    implementation("androidx.media3:media3-exoplayer:1.2.0")
+    implementation("androidx.media3:media3-session:1.2.0")
+    implementation("androidx.media3:media3-common:1.2.0")
 }
 
 class RoomSchemaArgProvider(
