@@ -53,8 +53,8 @@ import ir.thatsmejavad.mjmusic.core.audioPlayer.AudioHandler
 import ir.thatsmejavad.mjmusic.core.contentProvider.model.AudioColumns
 import ir.thatsmejavad.mjmusic.core.contentProvider.provider.AudioProviderImpl
 import ir.thatsmejavad.mjmusic.screens.music.MusicAction.OnAudioSelect
+import ir.thatsmejavad.mjmusic.ui.common.MusicCategory
 import ir.thatsmejavad.mjmusic.ui.common.ScrollableTabBar
-import ir.thatsmejavad.mjmusic.ui.common.getMusicCategories
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -75,14 +75,12 @@ fun MusicScreen(
 ) {
     var selectedSongId by remember { mutableLongStateOf(0) }
     val audioProviderImpl = AudioProviderImpl()
-
     val context = LocalContext.current
 
     //TODO we should be change later, this is just for test UI
     val songs by remember {
         mutableStateOf(audioProviderImpl.getSongs(context))
     }
-
 
     MusicScreen(
         navController = navController,
@@ -103,7 +101,6 @@ fun MusicScreen(
     }
 }
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MusicScreen(
@@ -112,10 +109,10 @@ fun MusicScreen(
     selectedSongId: Long,
     onAction: (MusicAction) -> Unit
 ) {
-    val context = LocalContext.current
-    val tabLabels = context.getMusicCategories()
+    val tabLabels = MusicCategory.entries.map { stringResource(it.value) }
     val pagerState = rememberPagerState { tabLabels.size }
     val coroutineScope = rememberCoroutineScope()
+    var isSortedAtoZ by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -149,32 +146,49 @@ fun MusicScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier
+                                    .clip(shape = MaterialTheme.shapes.small)
+                                    .clickable { isSortedAtoZ = !isSortedAtoZ },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
                                 Text(
+                                    modifier = Modifier.padding(8.dp),
                                     text = "Name",
                                     style = typography.bodyMedium
                                 )
 
-                                Spacer(modifier = Modifier.width(8.dp))
-
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_arrow_top),
+                                    modifier = Modifier.padding(8.dp).size(16.dp),
+                                    painter = if (isSortedAtoZ) {
+                                        painterResource(R.drawable.ic_arrow_top)
+                                    } else {
+                                        painterResource(R.drawable.ic_arrow_bottom)
+                                    },
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     contentDescription = "sort"
                                 )
                             }
 
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier
+                                    .clip(shape = MaterialTheme.shapes.small)
+                                    .clickable {  },
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Icon(
-                                    modifier = Modifier.align(Alignment.CenterVertically),
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .size(16.dp)
+                                        .align(Alignment.CenterVertically),
                                     painter = painterResource(R.drawable.ic_shuffle),
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     contentDescription = "shuffle"
                                 )
 
-                                Spacer(modifier = Modifier.width(8.dp))
-
                                 Text(
+                                    modifier = Modifier.padding(8.dp),
                                     text = " ${songs.count()} Songs",
                                     style = typography.bodyMedium
                                 )
@@ -243,7 +257,9 @@ fun SongItem(
         }
 
         Column(
-            modifier = Modifier.padding(4.dp).weight(1f)
+            modifier = Modifier
+                .padding(4.dp)
+                .weight(1f)
         ) {
             Text(
                 text = song.title ?: "",
