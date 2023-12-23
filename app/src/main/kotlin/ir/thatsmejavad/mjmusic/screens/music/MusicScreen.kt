@@ -15,12 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -160,7 +158,9 @@ fun MusicScreen(
                                 )
 
                                 Icon(
-                                    modifier = Modifier.padding(8.dp).size(16.dp),
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .size(16.dp),
                                     painter = if (isSortedAtoZ) {
                                         painterResource(R.drawable.ic_arrow_top)
                                     } else {
@@ -174,7 +174,7 @@ fun MusicScreen(
                             Row(
                                 modifier = Modifier
                                     .clip(shape = MaterialTheme.shapes.small)
-                                    .clickable {  },
+                                    .clickable { },
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
@@ -233,10 +233,10 @@ fun SongItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp)
-            .clip(shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
+            .clip(shape = MaterialTheme.shapes.small)
             .background(
                 color = backgroundColor,
-                shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
+                shape = MaterialTheme.shapes.small
             )
             .clickable(onClick = {
                 onSongClick()
