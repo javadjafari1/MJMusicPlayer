@@ -1,5 +1,7 @@
 package ir.thatsmejavad.mjmusic.core.contentProvider.model
 
+import ir.thatsmejavad.mjmusic.data.db.entites.SongEntity
+
 data class AudioColumns(
     val id: Long,
     val displayName: String?,
@@ -20,7 +22,22 @@ data class AudioColumns(
     val isNotification: Boolean,
     val isPodcast: Boolean,
     val isRingtone: Boolean,
-    val dateAdded: String?,
-    val dateModified: String?,
+    val dateAdded: Long?,
+    val dateModified: Long?,
     val isDrm: String?,
-)
+) {
+    fun toSongEntity() = SongEntity(
+        id = id,
+        name = displayName,
+        title = title,
+        albumId = albumId,
+        mimeType = mimeType,
+        addedDate = dateAdded ?: 0,
+        modifiedDate = dateModified ?: 0,
+        duration = duration,
+        year = year,
+        size = size,
+        track = track,
+        bitRate = ""
+    )
+}

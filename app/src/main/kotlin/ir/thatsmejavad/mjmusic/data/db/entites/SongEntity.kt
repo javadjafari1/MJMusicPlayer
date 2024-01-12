@@ -1,5 +1,8 @@
 package ir.thatsmejavad.mjmusic.data.db.entites
 
+import android.net.Uri
+import android.provider.MediaStore
+import androidx.media3.common.MediaItem
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -25,4 +28,16 @@ data class SongEntity(
     val track: Int,
     @ColumnInfo(name = "bit_rate")
     val bitRate: String
-)
+) {
+    fun toMediaItem(): MediaItem {
+        return MediaItem.Builder()
+            .setMediaId(id.toString())
+            .setUri(
+                Uri.withAppendedPath(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    id.toString()
+                )
+            )
+            .build()
+    }
+}

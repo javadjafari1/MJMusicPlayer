@@ -28,8 +28,8 @@ fun Cursor.toAudioColumnsData() = AudioColumns(
     isNotification = getInt(AudioProjectionIndexes.isNotification) != 0,
     isPodcast = getInt(AudioProjectionIndexes.isPodcast) != 0,
     isRingtone = getInt(AudioProjectionIndexes.isRingtone) != 0,
-    dateAdded = getString(AudioProjectionIndexes.dateAdded),
-    dateModified = getString(AudioProjectionIndexes.dateModified),
+    dateAdded = getLong(AudioProjectionIndexes.dateAdded),
+    dateModified = getLong(AudioProjectionIndexes.dateModified),
     isDrm = getString(AudioProjectionIndexes.isDrm)
 )
 
