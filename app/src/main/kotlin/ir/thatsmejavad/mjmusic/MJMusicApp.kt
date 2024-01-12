@@ -2,7 +2,7 @@ package ir.thatsmejavad.mjmusic
 
 import android.app.Application
 import ir.thatsmejavad.mjmusic.di.databaseModule
-import ir.thatsmejavad.mjmusic.di.audioPlayerModule
+import ir.thatsmejavad.mjmusic.di.audioModule
 import ir.thatsmejavad.mjmusic.di.viewModelsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -17,7 +17,7 @@ class MJMusicApp : Application() {
             modules(
                 viewModelsModule,
                 databaseModule,
-                audioPlayerModule
+                audioModule
             )
         }
     }
